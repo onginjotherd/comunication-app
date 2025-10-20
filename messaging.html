@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkSphere Messenger</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: light-dark(#e5ddd5, #121212);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .app-container {
+      width: 95%;
+      max-width: 1200px;
+      height: 90vh;
+      background: light-dark(#fff, #1e1e1e);
+      display: flex;
+      flex-direction: row;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Sidebar (Contacts) */
+    .sidebar {
+      width: 25%;
+      border-right: 1px solid light-dark(#ccc, #333);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      background: #022447;
+      color: #fff;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .menu {
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      background: light-dark(#fff, #2a2a2a);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: light-dark(#000, #fff);
+    }
+
+    .dropdown a:hover {
+      background: light-dark(#f1f1f1, #333);
+    }
+
+    .search-box {
+      padding: 10px;
+      background: light-dark(#f1f1f1, #2a2a2a);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    /* Contacts */
+    .contact-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .contact {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .contact:hover {
+      background: light-dark(#e9ecef, #333);
+    }
+
+    .contact img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    /* Chat Area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: light-dark(#efeae2, #181818);
+    }
+
+    .chat-header {
+      background: light-dark(#f0f0f0, #222);
+      padding: 10px 15px;
+      border-bottom: 1px solid light-dark(#ccc, #333);
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .chat-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: light-dark(#dfe6e9, #101010);
+    }
+
+    .message {
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      max-width: 70%;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .sent {
+      background: #d9fdd3;
+      margin-left: auto;
+    }
+
+    .received {
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+
+    /* Input Area */
+    .chat-input {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: light-dark(#f0f0f0, #222);
+      border-top: 1px solid light-dark(#ccc, #333);
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 20px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    /* Footer Navigation */
+    .footer-nav {
+      background: light-dark(#f8f9fa, #2a2a2a);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px solid light-dark(#ccc, #333);
+    }
+
+    .footer-nav a {
+      text-decoration: none;
+      color: light-dark(#555, #ccc);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer-nav a.active {
+      color: #007bff;
+    }
+
+    .footer-nav i {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="app-container">
+    <!-- Sidebar -->
+    <section class="sidebar">
+      <section class="sidebar-header">
+        <h2>LinkSphere</h2>
+        <i class="fa-solid fa-ellipsis-vertical menu"></i>
+      </section>
+
+      <section class="dropdown" id="dropdownMenu">
+        <a href="profile.html" id="profileBtn">Profile</a>
+        <a href="notifications.html" id="notificationBtn">Notifications</a>
+        <a href="settings.html" id="settingsBtn">Settings</a>
+        <a href="login.html" style="color:#c0392b">Logout</a>
+      </section>
+
+      <section class="search-box">
+        <input type="text" placeholder="Search contacts..." />
+      </section>
+
+      <section class="contact-list" id="contactList">
+        <section class="contact" data-name="HR Department">
+          <img src="https://via.placeholder.com/40" />
+          <section><strong>HR Department</strong><br><small>Welcome to HR chat</small></section>
+        </section>
+        <section class="contact" data-name="IT Support">
+          <img src="https://via.placeholder.com/40" />
+          <section><strong>IT Support</strong><br><small>Need tech help?</small></section>
+        </section>
+      </section>
+    </section>
+
+    <!-- Chat Area -->
+    <section class="chat-area">
+      <section class="chat-header">
+        <img src="https://via.placeholder.com/40" />
+        <h3 id="chatName">Select a chat</h3>
+      </section>
+
+      <section class="messages" id="messages">
+        <section class="message received">Hi there 👋</section>
+      </section>
+
+      <section class="chat-input">
+        <input type="text" id="msgInput" placeholder="Type a message..." />
+        <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+      </section>
+
+      <section class="footer-nav">
+        <a href="messaging.html" class="active"><i class="fa-solid fa-comments"></i>Chats</a>
+        <a href="departments.html"><i class="fa-solid fa-building"></i>Departments</a>
+        <a href="call.html"><i class="fa-solid fa-phone"></i>Calls</a>
+        <a href="updates.html"><i class="fa-solid fa-bell"></i>Updates</a>
+      </section>
+    </section>
+  </section>
+
+  <script>
+    // ===== Dropdown Menu =====
+    const menu = document.querySelector('.menu');
+    const dropdown = document.getElementById('dropdownMenu');
+    menu.addEventListener('click', () => {
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    window.addEventListener('click', (e) => {
+      if (!e.target.matches('.menu')) dropdown.style.display = 'none';
+    });
+
+    // ===== Chat Logic =====
+    const contacts = document.querySelectorAll('.contact');
+    const chatName = document.getElementById('chatName');
+    const messages = document.getElementById('messages');
+    const sendBtn = document.getElementById('sendBtn');
+    const msgInput = document.getElementById('msgInput');
+
+    contacts.forEach(contact => {
+      contact.addEventListener('click', () => {
+        contacts.forEach(c => c.classList.remove('active'));
+        contact.classList.add('active');
+        chatName.textContent = contact.dataset.name;
+        messages.innerHTML = `<div class="message received">Chat with ${contact.dataset.name}</div>`;
+      });
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const text = msgInput.value.trim();
+      if (text) {
+        const newMsg = document.createElement('div');
+        newMsg.classList.add('message', 'sent');
+        newMsg.textContent = text;
+        messages.appendChild(newMsg);
+        msgInput.value = '';
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      // === Open Profile Setup Page as a Popup ===
+      document.getElementById("profileBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // Open profile page as a small centered popup
+        const width = 420;
+        const height = 550;
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+
+        window.open(
+          "profile-setup.html",
+          "ProfileSetup",
+          `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+        );
+      });
+      // === Profile Popup ===
+      document.getElementById("profileBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        openPopup("profile-setup.html", "ProfileSetup");
+      });
+
+      // === Notifications Popup ===
+      document.getElementById("notificationBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        openPopup("notifications.html", "Notifications");
+      });
+
+      // === Reusable popup function ===
+      function openPopup(page, windowName) {
+        const width = 420;
+        const height = 550;
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+
+        window.open(
+          page,
+          windowName,
+          `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+        );
+      }
+    });
+    // Footer navigation functionality
+    const navLinks = document.querySelectorAll('.footer-nav a');
+    const sections = document.querySelectorAll('section');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+
+        // Remove 'active' class from all
+        navLinks.forEach(l => l.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+
+        // Activate clicked link and target section
+        link.classList.add('active');
+        document.getElementById(link.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: light-dark(#f0f0f0, #121212);
+      transition: background 0.3s ease;
+    }
+
+    .popup {
+      width: 90%;
+      max-width: 400px;
+      background: light-dark(#fff, #1e1e1e);
+      color: light-dark(#000, #fff);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid light-dark(#ccc, #333);
+      border-radius: 8px;
+      background: light-dark(#fff, #2a2a2a);
+      color: inherit;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer-text {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-text a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: #ff5252;
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <h2>Create Account</h2>
+    <form id="signupForm">
+      <input type="text" id="fullname" placeholder="Full Name" required />
+      <input type="text" id="employeeNo" placeholder="Employee No" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required minlength="6" />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <div class="error" id="errorMsg"></div>
+      <button type="submit">Sign Up</button>
+      <div class="footer-text">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("signupForm");
+    const errorMsg = document.getElementById("errorMsg");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById("fullname").value.trim();
+      const employeeNo = document.getElementById("employeeNo").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (!/^[^@]+@[^@]+\.[a-z]{2,}$/i.test(email)) {
+        errorMsg.textContent = "Enter a valid email address.";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      // Save signup data temporarily
+      const user = { fullName, employeeNo, email, password };
+      localStorage.setItem("userData", JSON.stringify(user));
+
+      // Redirect to profile setup
+      window.location.href = "profile.html";
+    });
+  </script>
+</body>
+</html>

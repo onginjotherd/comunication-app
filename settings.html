@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      padding-top: 20px;
+    }
+
+    .settings-container {
+      background: #fff;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #022447;
+      margin-bottom: 20px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-item label {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .setting-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #022447;
+    }
+
+    .setting-item input[type="text"],
+    .setting-item input[type="password"] {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 6px;
+      width: 55%;
+      font-size: 14px;
+    }
+
+    button.save-btn {
+      width: 100%;
+      background: #022447;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button.save-btn:hover {
+      background: #023b7b;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="settings-container">
+    <h2>Settings ⚙️</h2>
+
+    <div class="setting-item">
+      <label>Dark Mode</label>
+      <input type="checkbox" id="darkModeToggle" />
+    </div>
+
+    <div class="setting-item">
+      <label>Change Username</label>
+      <input type="text" id="usernameInput" placeholder="Enter new name" />
+    </div>
+
+    <div class="setting-item">
+      <label>Change Password</label>
+      <input type="password" id="passwordInput" placeholder="New password" />
+    </div>
+
+    <div class="setting-item">
+      <label>Receive Updates</label>
+      <input type="checkbox" id="updatesToggle" checked />
+    </div>
+
+    <button class="save-btn" id="saveBtn">Save Changes</button>
+  </div>
+
+  <script>
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      alert("Your settings have been saved!");
+      window.close();
+    });
+
+    // Optional dark mode simulation
+    document.getElementById("darkModeToggle").addEventListener("change", (e) => {
+      document.body.style.background = e.target.checked ? "#1e1e1e" : "#f8f9fa";
+      document.querySelector(".settings-container").style.background = e.target.checked ? "#2c2c2c" : "#fff";
+      document.querySelector(".settings-container").style.color = e.target.checked ? "#fff" : "#000";
+    });
+
+
+    function saveSettings() {
+      // Example: Collect input values from the settings form
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const notifications = document.getElementById("notifications").checked;
+
+      // Simulate saving process (e.g., to localStorage or API)
+      const userSettings = { username, email, notifications };
+      localStorage.setItem("userSettings", JSON.stringify(userSettings));
+
+      // Show success message
+      alert("Settings saved successfully!");
+
+      // Redirect or navigate back to Chats interface
+      openPage('messaging');  // 👈 this assumes you have a function like openPage(pageName)
+    }
+
+
+
+
+  </script>
+</body>
+
+</html>

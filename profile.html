@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Setup</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: var(--bg, #f4f4f4);
+      transition: 0.3s;
+    }
+
+    .profile-container {
+      background: white;
+      color: black;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #121212;
+      }
+
+      .profile-container {
+        background: #1e1e1e;
+        color: #eee;
+      }
+
+      input {
+        background: #2c2c2c;
+        color: #fff;
+        border: 1px solid #444;
+      }
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #007bff;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #007bff;
+    }
+
+    .upload-btn {
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      color: #007bff;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .form-group {
+      text-align: left;
+      margin: 10px 0;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .message {
+      margin-top: 10px;
+      color: green;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="profile-container">
+    <h2>Profile Setup</h2>
+    <div id="profileModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <img src="https://via.placeholder.com/100" id="profilePreview" class="profile-pic" alt="Profile Picture">
+        <label class="upload-btn" for="profilePic"><i class="fa-solid fa-camera"></i> Change Photo</label>
+        <input type="file" id="profilePic" accept="image/*">
+
+        <div class="form-group">
+          <label for="username"></label>
+          <input type="text" id="username" placeholder="Enter your username">
+        </div>
+
+        <div class="form-group">
+          <label for="employeeNo"></label>
+          <input type="text" id="employeeNo" placeholder="Enter your employee number">
+        </div>
+
+        <div class="form-group">
+          <label for="email"></label>
+          <input type="email" id="email" placeholder="Enter your email">
+        </div>
+
+        <button id="saveProfile">Save Changes</button>
+
+        <div class="message" id="saveMessage"></div>
+      </div>
+
+      <script>
+        const profilePic = document.getElementById("profilePic");
+        const profilePreview = document.getElementById("profilePreview");
+        const username = document.getElementById("username");
+        const employeeNo = document.getElementById("employeeNo");
+        const email = document.getElementById("email");
+        const saveBtn = document.getElementById("saveProfile");
+        const saveMessage = document.getElementById("saveMessage");
+
+        // ===== Open Profile Popup =====
+        const profileBtn = document.getElementById('profileBtn');
+        const modal = document.getElementById('profileModal');
+        const closeModal = document.getElementById('closeModal');
+
+        profileBtn.onclick = function () {
+          modal.style.display = "block";
+        }
+
+        closeModal.onclick = function () {
+          modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+        // Load existing data
+        window.onload = () => {
+          const data = JSON.parse(localStorage.getItem("userProfile"));
+          if (data) {
+            username.value = data.username || "";
+            employeeNo.value = data.employeeNo || "";
+            email.value = data.email || "";
+            if (data.photo) profilePreview.src = data.photo;
+          }
+        };
+
+        // Preview selected photo
+        profilePic.addEventListener("change", () => {
+          const file = profilePic.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              profilePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Save profile data
+        saveBtn.addEventListener("click", () => {
+          const data = {
+            username: username.value,
+            employeeNo: employeeNo.value,
+            email: email.value,
+            photo: profilePreview.src
+          };
+
+          localStorage.setItem("userProfile", JSON.stringify(data));
+
+          saveMessage.textContent = "Profile saved successfully!";
+          setTimeout(() => {
+            saveMessage.textContent = "";
+            window.close(); // closes popup after saving
+          }, 1500);
+        });
+        // === Settings Popup ===
+        document.getElementById("settingsBtn").addEventListener("click", (e) => {
+          e.preventDefault();
+          openPopup("settings.html", "Settings");
+        });
+
+      </script>
+</body>
+
+</html>
