@@ -14,7 +14,7 @@
     body {
       margin: 0;
       font-family: "Segoe UI", Roboto, sans-serif;
-      background: light-dark(#e5ddd5, #121212);
+      background: light-dark(#0a0f4eff);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,15 +22,14 @@
     }
 
     .app-container {
-      width: 95%;
-      max-width: 1200px;
-      height: 90vh;
+      width: 100%;
+      max-width: 1500px;
+      height: 100vh;
       background: light-dark(#fff, #1e1e1e);
       display: flex;
       flex-direction: row;
-      border-radius: 10px;
+      border-radius: 1px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
     /* Sidebar (Contacts) */
@@ -90,7 +89,7 @@
     }
 
     .search-box input {
-      width: 100%;
+      width: 80%;
       padding: 8px;
       border: none;
       border-radius: 8px;
@@ -125,11 +124,19 @@
 
     /* Chat Area */
     .chat-area {
+      position: relative;
+      padding: 15px;
+      overflow-y: auto;
+      background-image: url("https://as2.ftcdn.net/v2/jpg/15/97/08/97/1000_F_1597089717_Htx5zFW7Ez0GNia6n3ejIa02wB2NCFb2.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      backdrop-filter: blur(0px);
       flex: 1;
       display: flex;
       flex-direction: column;
       position: relative;
-      background: light-dark(#efeae2, #181818);
+      background: #022447;
     }
 
     .chat-header {
@@ -199,7 +206,7 @@
     .chat-input button {
       background: none;
       border: none;
-      color: #007bff;
+      color: #022447 ;
       font-size: 20px;
       margin-left: 10px;
       cursor: pointer;
@@ -223,13 +230,82 @@
     }
 
     .footer-nav a.active {
-      color: #007bff;
+      color: #022447f;
     }
 
     .footer-nav i {
       display: block;
       font-size: 18px;
       margin-bottom: 3px;
+    }
+
+    /*MOBILE RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid light-dark(#94949e, #333);
+      }
+
+      .chat-area {
+        flex: 1;
+        height: 50vh;
+      }
+
+      .chat-header h3 {
+        font-size: 14px;
+      }
+
+      .chat-input input {
+        font-size: 12px;
+      }
+
+      .footer-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+      }
+
+      /* Hide sidebar by default, show when contact clicked */
+      .sidebar {
+        display: none;
+      }
+
+      .sidebar.active {
+        display: flex;
+      }
+
+      .chat-area.active {
+        display: flex;
+      }
+    }
+
+
+    /* SMALL SCREEN FIX */
+    @media (max-width: 480px) {
+      .chat-header img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .chat-input button {
+        font-size: 16px;
+      }
+
+      .footer-nav i {
+        font-size: 16px;
+      }
+
+      .footer-nav a {
+        font-size: 11px;
+      }
     }
   </style>
 </head>
@@ -390,5 +466,6 @@
     });
   </script>
 </body>
+
 
 </html>
