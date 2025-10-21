@@ -147,7 +147,19 @@
         const saveBtn = document.getElementById("saveProfile");
         const saveMessage = document.getElementById("saveMessage");
 
-        // Preview selected photo
+        // Load saved profile if it exists
+        window.addEventListener("DOMContentLoaded", () => {
+            const saved = localStorage.getItem("userProfile");
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.photo) profilePreview.src = data.photo;
+                if (data.username) username.value = data.username;
+                if (data.employeeNo) employeeNo.value = data.employeeNo;
+                if (data.email) email.value = data.email;
+            }
+        });
+
+        // Preview selected photo instantly
         profilePic.addEventListener("change", () => {
             const file = profilePic.files[0];
             if (file) {
@@ -159,34 +171,31 @@
             }
         });
 
-        // Save profile data and redirect to login
+        // Save profile and redirect
         saveBtn.addEventListener("click", () => {
             const data = {
                 username: username.value.trim(),
                 employeeNo: employeeNo.value.trim(),
                 email: email.value.trim(),
-                photo: profilePreview.src
+                photo: profilePreview.src,
             };
 
-            // Validation
             if (!data.username || !data.employeeNo || !data.email) {
                 alert("Please fill all fields");
                 return;
             }
 
-            // Save to localStorage
-            localStorage.setItem("userProfile", JSON.stringify(data));
 
-            // Confirmation message
+            localStorage.setItem("userProfile", JSON.stringify(data));
             saveMessage.textContent = "Profile saved successfully! Redirecting...";
 
-            // Redirect to login page after 1.5 seconds
             setTimeout(() => {
-                window.location.href = "login.html"; 
-            }
-        });
+                window.location.href = "login.html";
+            }, 500);
+        });  
     </script>
 </body>
 
 </html>
+
 
